@@ -1,9 +1,0 @@
-{
-  "name": "izan-portfolio",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Izaan Shakil Portfolio - Serverless",
-  "dependencies": {
-    "nodemailer": "^6.9.13"
-  }
-}
