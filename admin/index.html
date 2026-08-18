@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — IZAAN Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="login-page" id="app-body">
+
+    <!-- ════════════════ LOGIN VIEW ════════════════ -->
+    <div id="login-view">
+        <div class="login-box">
+            <h1>Admin Login</h1>
+            <div id="login-error" class="error" style="display:none;"></div>
+            <form id="loginForm">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <a href="#" class="forgot-link" id="forgotBtn">Forgot Password?</a>
+        </div>
+    </div>
+
+    <!-- ════════════════ ADMIN PANEL (hidden until auth) ════════════════ -->
+    <div id="admin-view" style="display:none; width:100%;">
+        <aside class="admin-sidebar">
+            <div class="sidebar-brand">IZAAN <span>ADMIN</span></div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-tab="dashboard">Dashboard</a>
+                <a href="#" class="nav-item" data-tab="reports">Reports</a>
+                <a href="#" class="nav-item" data-tab="services">Services</a>
+                <a href="#" class="nav-item" data-tab="tools">Tools</a>
+                <a href="#" class="nav-item" data-tab="cases">Case Studies</a>
+                <a href="#" class="nav-item" data-tab="cv">CV / Resume</a>
+                <a href="#" class="nav-item" data-tab="submissions">Submissions</a>
+                <a href="#" class="nav-item" data-tab="media">Media Library</a>
+                <a href="#" class="nav-item" data-tab="seo">SEO Settings</a>
+                <a href="#" class="nav-item" data-tab="settings">Site Settings</a>
+                <a href="/" target="_blank" class="nav-item" style="margin-top:20px;color:var(--accent-4);">↗ View Site</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 class="admin-title" id="page-title">Dashboard</h1>
+                <button class="btn-logout" id="logoutBtn">Logout</button>
+            </div>
+
+            <!-- ──── TAB: DASHBOARD ──── -->
+            <div class="tab-content active" id="tab-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card"><h3>Reports</h3><div class="value" id="stat-reports">-</div></div>
+                    <div class="stat-card"><h3>Services</h3><div class="value" id="stat-services">-</div></div>
+                    <div class="stat-card"><h3>Tools</h3><div class="value" id="stat-tools">-</div></div>
+                    <div class="stat-card"><h3>Case Studies</h3><div class="value" id="stat-cases">-</div></div>
+                    <div class="stat-card"><h3>New Submissions</h3><div class="value" id="stat-submissions">-</div></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Quick Management Actions</div>
+                    <div class="quick-actions">
+                        <a href="#" class="quick-btn" data-tab="reports">+ Upload Report</a>
+                        <a href="#" class="quick-btn" data-tab="submissions">📩 View Inbox</a>
+                        <a href="#" class="quick-btn" data-tab="services">🛠️ Edit Services</a>
+                        <a href="#" class="quick-btn" data-tab="tools">⚙️ Manage Tools</a>
+                        <a href="#" class="quick-btn" data-tab="cases">📁 Edit Case Studies</a>
+                        <a href="#" class="quick-btn" data-tab="cv">📄 Replace CV</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ──── TAB: SERVICES ──── -->
+            <div class="tab-content" id="tab-services">
+                <div class="card">
+                    <div class="card-header" id="services-form-title">Add New Service / Expertise Card</div>
+                    <form id="service-form">
+                        <input type="hidden" id="svc-edit-id">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Service Title</label><input type="text" id="svc-title" required placeholder="e.g. Call QA Review"></div>
+                            <div class="form-group"><label>Key Focus Tags (JSON or comma separated)</label><input type="text" id="svc-keyfocus" placeholder='["Clean calls", "Flagged calls"]'></div>
+                            <div class="form-group full"><label>Description</label><textarea id="svc-desc" rows="2" placeholder="Brief description..."></textarea></div>
+                            <div class="form-group full"><label>SVG Icon Code (Optional)</label><textarea id="svc-icon" rows="2" placeholder="<svg...></svg>"></textarea></div>
+                        </div>
+                        <button type="submit" class="btn-submit" id="svc-submit-btn">Add Service</button>
+                        <button type="button" class="btn-cancel" id="svc-cancel-btn" style="display:none;" onclick="cancelServiceEdit()">Cancel Edit</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">Existing Services (<span id="svc-count">0</span>)</div>
+                    <div class="table-wrap"><table><thead><tr><th>Title</th><th>Description</th><th>Key Focus</th><th>Action</th></tr></thead><tbody id="svc-tbody"></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- ──── TAB: TOOLS ──── -->
+            <div class="tab-content" id="tab-tools">
+                <div class="card">
+                    <div class="card-header" id="tools-form-title">Add New Tool</div>
+                    <form id="tool-form">
+                        <input type="hidden" id="tool-edit-id">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Tool Name</label><input type="text" id="tool-name" required placeholder="e.g. n8n, Slack"></div>
+                            <div class="form-group"><label>Category</label>
+                                <select id="tool-category" required>
+                                    <option value="Automation">Automation</option>
+                                    <option value="Reporting">Reporting</option>
+                                    <option value="Communication">Communication</option>
+                                    <option value="Call Tracking &amp; CRM">Call Tracking &amp; CRM</option>
+                                    <option value="File &amp; Data Management">File &amp; Data Management</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Logo Abbreviation / Icon Letter</label><input type="text" id="tool-logotext" placeholder="e.g. n8n, AI, GS"></div>
+                            <div class="form-group"><label>Logo Image URL (Optional)</label><input type="text" id="tool-logourl" placeholder="/uploads/media/logo.png"></div>
+                            <div class="form-group full"><label>Raw SVG Code (Optional)</label><textarea id="tool-svg" rows="2" placeholder="<svg...></svg>"></textarea></div>
+                        </div>
+                        <button type="submit" class="btn-submit" id="tool-submit-btn">Add Tool</button>
+                        <button type="button" class="btn-cancel" id="tool-cancel-btn" style="display:none;" onclick="cancelToolEdit()">Cancel Edit</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">Tools Ecosystem (<span id="tool-count">0</span>)</div>
+                    <div class="table-wrap"><table><thead><tr><th>Icon</th><th>Name</th><th>Category</th><th>Icon Text</th><th>Action</th></tr></thead><tbody id="tool-tbody"></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- ──── TAB: CASE STUDIES ──── -->
+            <div class="tab-content" id="tab-cases">
+                <div class="card">
+                    <div class="card-header" id="cases-form-title">Add New Case Study</div>
+                    <form id="case-form">
+                        <input type="hidden" id="case-edit-id">
+                        <div class="form-grid">
+                            <div class="form-group full"><label>Case Study Title</label><input type="text" id="case-title" required placeholder="e.g. Call QA Automation Workflow"></div>
+                            <div class="form-group full"><label>Problem Statement</label><textarea id="case-problem" rows="2" placeholder="Manual call QA was taking too much time..."></textarea></div>
+                            <div class="form-group full"><label>Solution</label><textarea id="case-solution" rows="2" placeholder="Built a workflow using..."></textarea></div>
+                            <div class="form-group"><label>Workflow Flow Nodes (Comma separated)</label><input type="text" id="case-workflow" placeholder="CSV Export, Google Sheets, AI QA"></div>
+                            <div class="form-group"><label>Results (Comma separated)</label><input type="text" id="case-result" placeholder="Faster QA, Better visibility"></div>
+                            <div class="form-group"><label>Button Label</label><input type="text" id="case-btntext" value="View Details"></div>
+                            <div class="form-group"><label>Button URL</label><input type="text" id="case-btnurl" value="#"></div>
+                        </div>
+                        <button type="submit" class="btn-submit" id="case-submit-btn">Add Case Study</button>
+                        <button type="button" class="btn-cancel" id="case-cancel-btn" style="display:none;" onclick="cancelCaseEdit()">Cancel Edit</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">Case Studies (<span id="case-count">0</span>)</div>
+                    <div class="table-wrap"><table><thead><tr><th>Title</th><th>Problem</th><th>Action</th></tr></thead><tbody id="case-tbody"></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- ──── TAB: REPORTS ──── -->
+            <div class="tab-content" id="tab-reports">
+                <div class="card">
+                    <div class="card-header" id="reports-form-title">Add New Report</div>
+                    <form id="report-form">
+                        <input type="hidden" id="rpt-edit-id">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Report Title</label><input type="text" id="rpt-title" required placeholder="e.g. QA Dispo Report"></div>
+                            <div class="form-group"><label>Category</label>
+                                <select id="rpt-category" required>
+                                    <option value="QA Report">QA Report</option>
+                                    <option value="Buyer CPA">Buyer CPA</option>
+                                    <option value="Publisher CPA">Publisher CPA</option>
+                                    <option value="CRM QA">CRM / Tracker QA</option>
+                                    <option value="Automation">Automation Workflow</option>
+                                </select>
+                            </div>
+                            <div class="form-group full"><label>Description</label><textarea id="rpt-desc" rows="2" placeholder="Brief summary..."></textarea></div>
+                            <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="rpt-tags" placeholder="QA Report, Call Review"></div>
+                            <div class="form-group"><label>Report Date</label><input type="date" id="rpt-date"></div>
+                            <div class="form-group"><label>PDF File Path</label><input type="text" id="rpt-pdf" placeholder="/uploads/reports/report.pdf"></div>
+                            <div class="form-group"><label>Thumbnail Path</label><input type="text" id="rpt-thumb" placeholder="/uploads/thumbnails/cover.jpg"></div>
+                            <div class="form-group full" style="flex-direction:row;gap:20px;align-items:center;">
+                                <label style="cursor:pointer;"><input type="checkbox" id="rpt-published" checked style="width:auto;margin-right:6px;"> Published</label>
+                                <label style="cursor:pointer;"><input type="checkbox" id="rpt-featured" style="width:auto;margin-right:6px;"> Featured on Homepage</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit" id="rpt-submit-btn">Upload & Save Report</button>
+                        <button type="button" class="btn-cancel" id="rpt-cancel-btn" style="display:none;" onclick="cancelReportEdit()">Cancel Edit</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header">All Reports (<span id="rpt-count">0</span>)</div>
+                    <div class="table-wrap"><table><thead><tr><th>Title</th><th>Category</th><th>Date</th><th>PDF</th><th>Status</th><th>Homepage</th><th>Action</th></tr></thead><tbody id="rpt-tbody"></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- ──── TAB: CV ──── -->
+            <div class="tab-content" id="tab-cv">
+                <div class="card" id="cv-current-info">
+                    <div class="card-header">Current CV / Resume Document</div>
+                    <div id="cv-display"><p style="color:var(--text-dim);">Loading...</p></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Update CV Details</div>
+                    <form id="cv-form">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Document Title</label><input type="text" id="cv-title" value="Izaan Shakil — Resume"></div>
+                            <div class="form-group"><label>Description</label><input type="text" id="cv-description" value="Call QA & Technical Specialist CV"></div>
+                            <div class="form-group full"><label>PDF File Path</label><input type="text" id="cv-pdf" placeholder="/uploads/cv/Izaan_Shakil_CV.pdf"></div>
+                            <div class="form-group full"><label style="cursor:pointer;"><input type="checkbox" id="cv-showbtn" checked style="width:auto;margin-right:6px;"> Enable CV Download Button on Portfolio</label></div>
+                        </div>
+                        <button type="submit" class="btn-submit">Save CV</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ──── TAB: SUBMISSIONS ──── -->
+            <div class="tab-content" id="tab-submissions">
+                <div class="card">
+                    <div class="card-header">Contact & Meeting Submissions Inbox (<span id="sub-count">0</span>)</div>
+                    <div class="table-wrap"><table><thead><tr><th>Submitted</th><th>Type</th><th>Name / Email</th><th>Service</th><th>Booked Slot</th><th>Message</th><th>Status</th><th>Action</th></tr></thead><tbody id="sub-tbody"></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- ──── TAB: MEDIA ──── -->
+            <div class="tab-content" id="tab-media">
+                <div class="card">
+                    <div class="card-header">Media Library</div>
+                    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;">
+                        Since this is a serverless site, media files are managed via your project folder. To add images or documents:
+                    </p>
+                    <ol style="color:var(--text-muted);font-size:0.85rem;padding-left:20px;line-height:1.8;">
+                        <li>Place files in <code>/uploads/media/</code> folder</li>
+                        <li>Push to GitHub</li>
+                        <li>Vercel auto-deploys with new files</li>
+                    </ol>
+                    <p style="color:var(--text-dim);font-size:0.8rem;margin-top:16px;">Use paths like <code>/uploads/media/your-file.jpg</code> in Settings or Report fields.</p>
+                </div>
+            </div>
+
+            <!-- ──── TAB: SEO ──── -->
+            <div class="tab-content" id="tab-seo">
+                <div class="card">
+                    <div class="card-header">Search Engine Optimization (SEO) &amp; Meta Settings</div>
+                    <form id="seo-form">
+                        <div class="form-grid">
+                            <div class="form-group full"><label>Page Meta Title</label><input type="text" id="meta_title"></div>
+                            <div class="form-group full"><label>Meta Description</label><textarea id="meta_description" rows="3"></textarea></div>
+                            <div class="form-group full"><label>Meta Keywords (Comma separated)</label><input type="text" id="meta_keywords"></div>
+                            <div class="form-group"><label>Open Graph (OG) Image URL</label><input type="text" id="og_image"></div>
+                            <div class="form-group"><label>Canonical URL</label><input type="text" id="canonical_url"></div>
+                        </div>
+                        <button type="submit" class="btn-submit">Save SEO Settings</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ──── TAB: SITE SETTINGS ──── -->
+            <div class="tab-content" id="tab-settings">
+                <div class="card">
+                    <div class="card-header">General Site &amp; Notification Settings</div>
+                    <form id="settings-general-form">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Site Branding Title</label><input type="text" id="site_title"></div>
+                            <div class="form-group"><label>Contact Form Notification Email</label><input type="email" id="contact_email" placeholder="your-email@gmail.com"></div>
+                            <div class="form-group full"><label>Meeting Booking URL (Calendly Link)</label><input type="text" id="booking_url" placeholder="https://calendly.com/your-username/30min"></div>
+                            <div class="form-group"><label>LinkedIn URL</label><input type="text" id="social_linkedin" placeholder="https://linkedin.com/in/username"></div>
+                            <div class="form-group"><label>Facebook URL</label><input type="text" id="social_facebook" placeholder="https://facebook.com/username"></div>
+                        </div>
+                        <button type="submit" class="btn-submit">Save General Settings</button>
+                    </form>
+                </div>
+                <div class="card" style="border:1px solid rgba(13,107,232,0.3);">
+                    <div class="card-header" style="color:var(--accent-4);">🎯 Hero Section Configuration</div>
+                    <form id="settings-hero-form">
+                        <div class="form-grid">
+                            <div class="form-group full"><label>Main Headline</label><input type="text" id="hero_headline"></div>
+                            <div class="form-group full"><label>Subtitle / Description</label><textarea id="hero_subtitle" rows="3"></textarea></div>
+                            <div class="form-group"><label>Primary Button 1 Text</label><input type="text" id="hero_btn1_text"></div>
+                            <div class="form-group"><label>Primary Button 1 Link</label><input type="text" id="hero_btn1_link" placeholder="/reports"></div>
+                            <div class="form-group"><label>Secondary Button 2 Text</label><input type="text" id="hero_btn2_text"></div>
+                            <div class="form-group"><label>Secondary Button 2 Link</label><input type="text" id="hero_btn2_link" placeholder="#contact"></div>
+                            <div class="form-group"><label>Third Button 3 Text</label><input type="text" id="hero_btn3_text"></div>
+                            <div class="form-group"><label>Third Button 3 Link</label><input type="text" id="hero_btn3_link" placeholder="/cv/download"></div>
+                            <div class="form-group full"><label>Short Intro Video Link (Optional)</label><input type="url" id="hero_video_url" placeholder="https://youtube.com/watch?v=..."></div>
+                            <div class="form-group"><label>Profile Photo Path</label><input type="text" id="hero_profile_img" placeholder="/uploads/media/profile.jpg"></div>
+                            <div class="form-group"><label>Hero Background Image Path</label><input type="text" id="hero_bg_img" placeholder="/uploads/media/hero-bg.jpg"></div>
+                            <div class="form-group full"><label>Background Image Opacity (%)</label>
+                                <div style="display:flex;align-items:center;gap:15px;">
+                                    <input type="range" id="hero_bg_opacity" min="0" max="100" value="40" oninput="document.getElementById('opacityVal').textContent=this.value+'%'" style="flex:1;">
+                                    <span id="opacityVal" style="font-weight:700;color:var(--accent-4);width:45px;">40%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit" style="margin-top:15px;">Save Hero Section Settings</button>
+                    </form>
+                </div>
+                <div class="card" style="border:1px solid rgba(13,107,232,0.3);">
+                    <div class="card-header" style="color:var(--accent-4);">📧 SMTP Email Delivery</div>
+                    <p style="font-size:0.85rem;color:var(--text-muted);">
+                        SMTP credentials are securely managed via <strong>Vercel Environment Variables</strong>. Set <code>SMTP_HOST</code>, <code>SMTP_PORT</code>, <code>SMTP_USER</code>, <code>SMTP_PASS</code>, and <code>ADMIN_EMAIL</code> in your Vercel project settings.
+                    </p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        // ════════════════════════════════════════════════════════════════
+        // FIREBASE IMPORTS
+        // ════════════════════════════════════════════════════════════════
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+        const app = initializeApp({
+            apiKey: "AIzaSyASc4NeSa5EjC3cD3AlfX0jYBANp0f5-Io",
+            authDomain: "portfolio-dab96.firebaseapp.com",
+            projectId: "portfolio-dab96",
+            storageBucket: "portfolio-dab96.firebasestorage.app",
+            messagingSenderId: "573008159687",
+            appId: "1:573008159687:web:f96cbec7cac3fcee156fe2"
+        });
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // ════════════════════════════════════════════════════════════════
+        // HELPERS
+        // ════════════════════════════════════════════════════════════════
+        function toast(msg, isErr = false) {
+            const t = document.createElement('div');
+            t.className = 'toast ' + (isErr ? 'toast-error' : 'toast-success');
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+        async function getAll(col, sorts = []) {
+            let q = sorts.length ? query(collection(db, col), ...sorts) : collection(db, col);
+            const snap = await getDocs(q);
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+        async function countCol(col) {
+            const snap = await getDocs(collection(db, col));
+            return snap.size;
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // AUTH
+        // ════════════════════════════════════════════════════════════════
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                document.getElementById('login-view').style.display = 'none';
+                document.getElementById('admin-view').style.display = 'flex';
+                document.getElementById('app-body').classList.remove('login-page');
+                document.getElementById('app-body').classList.add('authenticated');
+                loadDashboard();
+            } else {
+                document.getElementById('login-view').style.display = '';
+                document.getElementById('admin-view').style.display = 'none';
+                document.getElementById('app-body').classList.add('login-page');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const errEl = document.getElementById('login-error');
+            errEl.style.display = 'none';
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value);
+            } catch (err) {
+                errEl.textContent = err.message;
+                errEl.style.display = 'block';
+            }
+        });
+
+        document.getElementById('forgotBtn').addEventListener('click', async e => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            if (!email) return alert('Enter your email first');
+            try { await sendPasswordResetEmail(auth, email); alert('Password reset email sent!'); }
+            catch (err) { alert(err.message); }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // TAB NAVIGATION
+        // ════════════════════════════════════════════════════════════════
+        const tabTitles = { dashboard:'Dashboard', reports:'Reports', services:'Services', tools:'Tools', cases:'Case Studies', cv:'CV / Resume', submissions:'Submissions', media:'Media Library', seo:'SEO Settings', settings:'Site Settings' };
+        const tabLoaders = { dashboard:loadDashboard, services:loadServices, tools:loadTools, cases:loadCases, reports:loadReports, cv:loadCV, submissions:loadSubmissions, seo:loadSEO, settings:loadSettings };
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const tabEl = document.getElementById('tab-' + tab);
+            if (tabEl) tabEl.classList.add('active');
+            const navEl = document.querySelector(`.nav-item[data-tab="${tab}"]`);
+            if (navEl) navEl.classList.add('active');
+            document.getElementById('page-title').textContent = tabTitles[tab] || tab;
+            if (tabLoaders[tab]) tabLoaders[tab]();
+        }
+
+        document.querySelectorAll('[data-tab]').forEach(el => {
+            el.addEventListener('click', e => { e.preventDefault(); switchTab(el.dataset.tab); });
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // DASHBOARD
+        // ════════════════════════════════════════════════════════════════
+        async function loadDashboard() {
+            try {
+                const [r, s, t, c, sub] = await Promise.all([countCol('reports'), countCol('services'), countCol('tools'), countCol('case_studies'), countCol('contact_submissions')]);
+                document.getElementById('stat-reports').textContent = r;
+                document.getElementById('stat-services').textContent = s;
+                document.getElementById('stat-tools').textContent = t;
+                document.getElementById('stat-cases').textContent = c;
+                document.getElementById('stat-submissions').textContent = sub;
+            } catch (e) { console.error(e); }
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // SERVICES CRUD
+        // ════════════════════════════════════════════════════════════════
+        async function loadServices() {
+            try {
+                const items = await getAll('services', [orderBy('sort_order')]);
+                document.getElementById('svc-count').textContent = items.length;
+                const tbody = document.getElementById('svc-tbody');
+                tbody.innerHTML = items.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--text-dim);">No services added yet.</td></tr>' :
+                    items.map(s => `<tr><td><strong>${s.title}</strong></td><td>${s.description||''}</td><td><code>${s.key_focus||''}</code></td>
+                    <td style="white-space:nowrap;"><button class="btn-edit" onclick="editService('${s.id}')">Edit</button>
+                    <button class="btn-danger" onclick="deleteService('${s.id}')">Delete</button></td></tr>`).join('');
+                window._services = items;
+            } catch (e) { console.error(e); toast('Error loading services', true); }
+        }
+        window.editService = function(id) {
+            const s = window._services.find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('svc-edit-id').value = id;
+            document.getElementById('svc-title').value = s.title || '';
+            document.getElementById('svc-keyfocus').value = s.key_focus || '';
+            document.getElementById('svc-desc').value = s.description || '';
+            document.getElementById('svc-icon').value = s.icon_svg || '';
+            document.getElementById('svc-submit-btn').textContent = 'Update Service';
+            document.getElementById('svc-cancel-btn').style.display = 'inline-block';
+            document.getElementById('services-form-title').textContent = 'Edit Service';
+        };
+        window.cancelServiceEdit = function() {
+            document.getElementById('service-form').reset();
+            document.getElementById('svc-edit-id').value = '';
+            document.getElementById('svc-submit-btn').textContent = 'Add Service';
+            document.getElementById('svc-cancel-btn').style.display = 'none';
+            document.getElementById('services-form-title').textContent = 'Add New Service / Expertise Card';
+        };
+        window.deleteService = async function(id) {
+            if (!confirm('Delete this service?')) return;
+            try { await deleteDoc(doc(db, 'services', id)); toast('Service deleted'); loadServices(); }
+            catch (e) { toast('Error deleting', true); }
+        };
+        document.getElementById('service-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = { title: document.getElementById('svc-title').value, description: document.getElementById('svc-desc').value, key_focus: document.getElementById('svc-keyfocus').value, icon_svg: document.getElementById('svc-icon').value, sort_order: 0, visible: 1 };
+            const editId = document.getElementById('svc-edit-id').value;
+            try {
+                if (editId) { await updateDoc(doc(db, 'services', editId), data); toast('Service updated'); }
+                else { await addDoc(collection(db, 'services'), data); toast('Service added'); }
+                cancelServiceEdit(); loadServices();
+            } catch (e) { toast('Error saving', true); console.error(e); }
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // TOOLS CRUD
+        // ════════════════════════════════════════════════════════════════
+        async function loadTools() {
+            try {
+                const items = await getAll('tools', [orderBy('sort_order')]);
+                document.getElementById('tool-count').textContent = items.length;
+                const tbody = document.getElementById('tool-tbody');
+                tbody.innerHTML = items.length === 0 ? '<tr><td colspan="5" style="text-align:center;color:var(--text-dim);">No tools added yet.</td></tr>' :
+                    items.map(t => {
+                        let icon = '';
+                        if (t.logo_url && t.logo_url.startsWith('/uploads/')) icon = `<img src="${t.logo_url}" style="width:32px;height:32px;object-fit:contain;border-radius:6px;">`;
+                        else if (t.icon_svg) icon = `<div style="width:32px;height:32px;display:grid;place-items:center;">${t.icon_svg}</div>`;
+                        else icon = `<span style="display:inline-block;padding:4px 8px;background:rgba(13,107,232,0.15);border:1px solid rgba(13,107,232,0.3);border-radius:6px;font-weight:bold;color:var(--accent-4);font-size:0.75rem;">${t.logo_text||t.name.substring(0,3).toUpperCase()}</span>`;
+                        return `<tr><td style="width:60px;text-align:center;">${icon}</td><td><strong>${t.name}</strong></td><td>${t.category}</td><td><code>${t.logo_text||t.logo_url||'Letter'}</code></td>
+                        <td style="white-space:nowrap;"><button class="btn-edit" onclick="editTool('${t.id}')">Edit</button>
+                        <button class="btn-danger" onclick="deleteTool('${t.id}')">Delete</button></td></tr>`;
+                    }).join('');
+                window._tools = items;
+            } catch (e) { console.error(e); toast('Error loading tools', true); }
+        }
+        window.editTool = function(id) {
+            const t = window._tools.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('tool-edit-id').value = id;
+            document.getElementById('tool-name').value = t.name || '';
+            document.getElementById('tool-category').value = t.category || 'Automation';
+            document.getElementById('tool-logotext').value = t.logo_text || '';
+            document.getElementById('tool-logourl').value = t.logo_url || '';
+            document.getElementById('tool-svg').value = t.icon_svg || '';
+            document.getElementById('tool-submit-btn').textContent = 'Update Tool';
+            document.getElementById('tool-cancel-btn').style.display = 'inline-block';
+            document.getElementById('tools-form-title').textContent = 'Edit Tool';
+        };
+        window.cancelToolEdit = function() {
+            document.getElementById('tool-form').reset();
+            document.getElementById('tool-edit-id').value = '';
+            document.getElementById('tool-submit-btn').textContent = 'Add Tool';
+            document.getElementById('tool-cancel-btn').style.display = 'none';
+            document.getElementById('tools-form-title').textContent = 'Add New Tool';
+        };
+        window.deleteTool = async function(id) {
+            if (!confirm('Delete this tool?')) return;
+            try { await deleteDoc(doc(db, 'tools', id)); toast('Tool deleted'); loadTools(); }
+            catch (e) { toast('Error deleting', true); }
+        };
+        document.getElementById('tool-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = { name: document.getElementById('tool-name').value, category: document.getElementById('tool-category').value, logo_text: document.getElementById('tool-logotext').value, logo_url: document.getElementById('tool-logourl').value, icon_svg: document.getElementById('tool-svg').value, logo_type: 'text', sort_order: 0, visible: 1 };
+            const editId = document.getElementById('tool-edit-id').value;
+            try {
+                if (editId) { await updateDoc(doc(db, 'tools', editId), data); toast('Tool updated'); }
+                else { await addDoc(collection(db, 'tools'), data); toast('Tool added'); }
+                cancelToolEdit(); loadTools();
+            } catch (e) { toast('Error saving', true); console.error(e); }
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // CASE STUDIES CRUD
+        // ════════════════════════════════════════════════════════════════
+        async function loadCases() {
+            try {
+                const items = await getAll('case_studies', [orderBy('sort_order')]);
+                document.getElementById('case-count').textContent = items.length;
+                const tbody = document.getElementById('case-tbody');
+                tbody.innerHTML = items.length === 0 ? '<tr><td colspan="3" style="text-align:center;color:var(--text-dim);">No case studies added yet.</td></tr>' :
+                    items.map(c => `<tr><td><strong>${c.title}</strong></td><td>${c.problem||''}</td>
+                    <td style="white-space:nowrap;"><button class="btn-edit" onclick="editCase('${c.id}')">Edit</button>
+                    <button class="btn-danger" onclick="deleteCase('${c.id}')">Delete</button></td></tr>`).join('');
+                window._cases = items;
+            } catch (e) { console.error(e); toast('Error loading case studies', true); }
+        }
+        window.editCase = function(id) {
+            const c = window._cases.find(x => x.id === id);
+            if (!c) return;
+            document.getElementById('case-edit-id').value = id;
+            document.getElementById('case-title').value = c.title || '';
+            document.getElementById('case-problem').value = c.problem || '';
+            document.getElementById('case-solution').value = c.solution || '';
+            document.getElementById('case-workflow').value = c.workflow || '';
+            document.getElementById('case-result').value = c.result || '';
+            document.getElementById('case-btntext').value = c.button_text || 'View Details';
+            document.getElementById('case-btnurl').value = c.button_url || '#';
+            document.getElementById('case-submit-btn').textContent = 'Update Case Study';
+            document.getElementById('case-cancel-btn').style.display = 'inline-block';
+            document.getElementById('cases-form-title').textContent = 'Edit Case Study';
+        };
+        window.cancelCaseEdit = function() {
+            document.getElementById('case-form').reset();
+            document.getElementById('case-edit-id').value = '';
+            document.getElementById('case-submit-btn').textContent = 'Add Case Study';
+            document.getElementById('case-cancel-btn').style.display = 'none';
+            document.getElementById('cases-form-title').textContent = 'Add New Case Study';
+        };
+        window.deleteCase = async function(id) {
+            if (!confirm('Delete this case study?')) return;
+            try { await deleteDoc(doc(db, 'case_studies', id)); toast('Case study deleted'); loadCases(); }
+            catch (e) { toast('Error deleting', true); }
+        };
+        document.getElementById('case-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = { title: document.getElementById('case-title').value, problem: document.getElementById('case-problem').value, solution: document.getElementById('case-solution').value, workflow: document.getElementById('case-workflow').value, result: document.getElementById('case-result').value, button_text: document.getElementById('case-btntext').value, button_url: document.getElementById('case-btnurl').value, sort_order: 0, visible: 1, screenshots: '' };
+            const editId = document.getElementById('case-edit-id').value;
+            try {
+                if (editId) { await updateDoc(doc(db, 'case_studies', editId), data); toast('Case study updated'); }
+                else { await addDoc(collection(db, 'case_studies'), data); toast('Case study added'); }
+                cancelCaseEdit(); loadCases();
+            } catch (e) { toast('Error saving', true); console.error(e); }
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // REPORTS CRUD
+        // ════════════════════════════════════════════════════════════════
+        async function loadReports() {
+            try {
+                const items = await getAll('reports', [orderBy('sort_order')]);
+                document.getElementById('rpt-count').textContent = items.length;
+                const tbody = document.getElementById('rpt-tbody');
+                tbody.innerHTML = items.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);">No reports uploaded yet.</td></tr>' :
+                    items.map(r => `<tr><td><strong>${r.title}</strong></td><td>${r.category||''}</td><td>${r.report_date||'N/A'}</td><td>${r.pdf_path?'✓ Uploaded':'None'}</td>
+                    <td><button class="badge ${r.published?'badge-success':'badge-warning'}" onclick="toggleReport('${r.id}','published',${r.published?0:1})">${r.published?'Published':'Draft'}</button></td>
+                    <td><button class="badge ${r.featured?'badge-success':'badge-warning'}" onclick="toggleReport('${r.id}','featured',${r.featured?0:1})">${r.featured?'★ Featured':'Normal'}</button></td>
+                    <td style="white-space:nowrap;"><button class="btn-edit" onclick="editReport('${r.id}')">Edit</button>
+                    <button class="btn-danger" onclick="deleteReport('${r.id}')">Delete</button></td></tr>`).join('');
+                window._reports = items;
+            } catch (e) { console.error(e); toast('Error loading reports', true); }
+        }
+        window.toggleReport = async function(id, field, val) {
+            try { await updateDoc(doc(db, 'reports', id), { [field]: val }); toast(field + ' toggled'); loadReports(); }
+            catch (e) { toast('Error', true); }
+        };
+        window.editReport = function(id) {
+            const r = window._reports.find(x => x.id === id);
+            if (!r) return;
+            document.getElementById('rpt-edit-id').value = id;
+            document.getElementById('rpt-title').value = r.title || '';
+            document.getElementById('rpt-category').value = r.category || 'QA Report';
+            document.getElementById('rpt-desc').value = r.description || '';
+            document.getElementById('rpt-tags').value = r.tags || '';
+            document.getElementById('rpt-date').value = r.report_date || '';
+            document.getElementById('rpt-pdf').value = r.pdf_path || '';
+            document.getElementById('rpt-thumb').value = r.thumbnail_path || '';
+            document.getElementById('rpt-published').checked = !!r.published;
+            document.getElementById('rpt-featured').checked = !!r.featured;
+            document.getElementById('rpt-submit-btn').textContent = 'Update Report';
+            document.getElementById('rpt-cancel-btn').style.display = 'inline-block';
+            document.getElementById('reports-form-title').textContent = 'Edit Report';
+        };
+        window.cancelReportEdit = function() {
+            document.getElementById('report-form').reset();
+            document.getElementById('rpt-edit-id').value = '';
+            document.getElementById('rpt-published').checked = true;
+            document.getElementById('rpt-submit-btn').textContent = 'Upload & Save Report';
+            document.getElementById('rpt-cancel-btn').style.display = 'none';
+            document.getElementById('reports-form-title').textContent = 'Add New Report';
+        };
+        window.deleteReport = async function(id) {
+            if (!confirm('Delete this report?')) return;
+            try { await deleteDoc(doc(db, 'reports', id)); toast('Report deleted'); loadReports(); }
+            catch (e) { toast('Error deleting', true); }
+        };
+        document.getElementById('report-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = { title: document.getElementById('rpt-title').value, category: document.getElementById('rpt-category').value, description: document.getElementById('rpt-desc').value, tags: document.getElementById('rpt-tags').value, report_date: document.getElementById('rpt-date').value, pdf_path: document.getElementById('rpt-pdf').value, thumbnail_path: document.getElementById('rpt-thumb').value, published: document.getElementById('rpt-published').checked ? 1 : 0, featured: document.getElementById('rpt-featured').checked ? 1 : 0, sort_order: 0 };
+            const editId = document.getElementById('rpt-edit-id').value;
+            try {
+                if (editId) { await updateDoc(doc(db, 'reports', editId), data); toast('Report updated'); }
+                else { await addDoc(collection(db, 'reports'), data); toast('Report added'); }
+                cancelReportEdit(); loadReports();
+            } catch (e) { toast('Error saving', true); console.error(e); }
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // CV
+        // ════════════════════════════════════════════════════════════════
+        async function loadCV() {
+            try {
+                const snap = await getDoc(doc(db, 'cv', 'current'));
+                if (snap.exists()) {
+                    const cv = snap.data();
+                    document.getElementById('cv-display').innerHTML = `<p style="margin-bottom:12px;color:var(--text-muted);"><strong>${cv.title||''}</strong> — ${cv.description||''}</p><p><a href="${cv.pdf_path||'#'}" target="_blank" style="color:var(--accent-4);font-size:0.85rem;">📄 Open Current CV PDF (${cv.pdf_path||'Not set'})</a></p>`;
+                    document.getElementById('cv-title').value = cv.title || '';
+                    document.getElementById('cv-description').value = cv.description || '';
+                    document.getElementById('cv-pdf').value = cv.pdf_path || '';
+                    document.getElementById('cv-showbtn').checked = !!cv.show_button;
+                } else {
+                    document.getElementById('cv-display').innerHTML = '<p style="color:var(--text-dim);">No CV uploaded yet.</p>';
+                }
+            } catch (e) { console.error(e); }
+        }
+        document.getElementById('cv-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            try {
+                await setDoc(doc(db, 'cv', 'current'), { title: document.getElementById('cv-title').value, description: document.getElementById('cv-description').value, pdf_path: document.getElementById('cv-pdf').value, show_button: document.getElementById('cv-showbtn').checked ? 1 : 0, last_updated: new Date().toISOString() });
+                toast('CV updated'); loadCV();
+            } catch (e) { toast('Error saving CV', true); console.error(e); }
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // SUBMISSIONS
+        // ════════════════════════════════════════════════════════════════
+        async function loadSubmissions() {
+            try {
+                const items = await getAll('contact_submissions');
+                items.sort((a, b) => (b.submitted_at || '').localeCompare(a.submitted_at || ''));
+                document.getElementById('sub-count').textContent = items.length;
+                const tbody = document.getElementById('sub-tbody');
+                tbody.innerHTML = items.length === 0 ? '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);">No submissions yet.</td></tr>' :
+                    items.map(s => {
+                        const isMtg = !!(s.meeting_date || s.meeting_time);
+                        const dt = s.submitted_at ? new Date(s.submitted_at) : null;
+                        return `<tr>
+                        <td style="white-space:nowrap;font-size:0.75rem;">${dt?dt.toLocaleDateString():'—'}<br><span style="color:var(--text-dim);">${dt?dt.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):''}</span></td>
+                        <td>${isMtg?'<span class="badge badge-success">📅 Meeting</span>':'<span class="badge" style="background:rgba(255,255,255,0.1);color:var(--text-dim);">✉️ Inquiry</span>'}</td>
+                        <td><strong>${s.name||''}</strong><br><span style="color:var(--accent-4);font-size:0.78rem;">${s.email||''}</span>${s.company?'<br><span style="font-size:0.72rem;color:var(--text-dim);">'+s.company+'</span>':''}</td>
+                        <td>${s.service_needed||'-'}</td>
+                        <td style="white-space:nowrap;font-size:0.78rem;color:#63B5FF;">${isMtg?'📅 <strong>'+(s.meeting_date||'TBD')+'</strong><br>⏰ <strong>'+(s.meeting_time||'TBD')+'</strong>':'<span style="color:var(--text-dim);">-</span>'}</td>
+                        <td style="max-width:220px;font-size:0.8rem;">${s.message||''}</td>
+                        <td><select onchange="updateSubStatus('${s.id}',this.value)" style="padding:2px 6px;font-size:0.75rem;width:auto;">
+                            <option value="New" ${s.status==='New'?'selected':''}>New</option>
+                            <option value="Read" ${s.status==='Read'?'selected':''}>Read</option>
+                            <option value="Replied" ${s.status==='Replied'?'selected':''}>Replied</option>
+                            <option value="Cancelled" ${s.status==='Cancelled'?'selected':''}>Cancelled</option>
+                        </select></td>
+                        <td><button class="btn-danger" onclick="deleteSub('${s.id}')">Delete</button></td></tr>`;
+                    }).join('');
+            } catch (e) { console.error(e); toast('Error loading submissions', true); }
+        }
+        window.updateSubStatus = async function(id, status) {
+            try { await updateDoc(doc(db, 'contact_submissions', id), { status }); toast('Status updated'); }
+            catch (e) { toast('Error', true); }
+        };
+        window.deleteSub = async function(id) {
+            if (!confirm('Delete this submission?')) return;
+            try { await deleteDoc(doc(db, 'contact_submissions', id)); toast('Deleted'); loadSubmissions(); }
+            catch (e) { toast('Error', true); }
+        };
+
+        // ════════════════════════════════════════════════════════════════
+        // SEO SETTINGS
+        // ════════════════════════════════════════════════════════════════
+        const seoKeys = ['meta_title','meta_description','meta_keywords','og_image','canonical_url'];
+        async function loadSEO() {
+            try {
+                const snap = await getDocs(collection(db, 'settings'));
+                snap.forEach(d => { if (seoKeys.includes(d.id)) { const el = document.getElementById(d.id); if(el) el.value = d.data().value || ''; }});
+            } catch (e) { console.error(e); }
+        }
+        document.getElementById('seo-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            try {
+                await Promise.all(seoKeys.map(k => { const el = document.getElementById(k); return el ? setDoc(doc(db, 'settings', k), { value: el.value }) : null; }));
+                toast('SEO settings saved');
+            } catch (e) { toast('Error saving', true); console.error(e); }
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // SITE SETTINGS
+        // ════════════════════════════════════════════════════════════════
+        const generalKeys = ['site_title','contact_email','booking_url','social_linkedin','social_facebook'];
+        const heroKeys = ['hero_headline','hero_subtitle','hero_btn1_text','hero_btn1_link','hero_btn2_text','hero_btn2_link','hero_btn3_text','hero_btn3_link','hero_video_url','hero_profile_img','hero_bg_img','hero_bg_opacity'];
+        async function loadSettings() {
+            try {
+                const allKeys = [...generalKeys, ...heroKeys];
+                const snap = await getDocs(collection(db, 'settings'));
+                snap.forEach(d => {
+                    if (allKeys.includes(d.id)) {
+                        const el = document.getElementById(d.id);
+                        if (el) {
+                            if (el.type === 'range') { el.value = d.data().value || '40'; document.getElementById('opacityVal').textContent = el.value + '%'; }
+                            else el.value = d.data().value || '';
+                        }
+                    }
+                });
+            } catch (e) { console.error(e); }
+        }
+        document.getElementById('settings-general-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            try {
+                await Promise.all(generalKeys.map(k => { const el = document.getElementById(k); return el ? setDoc(doc(db, 'settings', k), { value: el.value }) : null; }));
+                toast('General settings saved');
+            } catch (e) { toast('Error saving', true); console.error(e); }
+        });
+        document.getElementById('settings-hero-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            try {
+                await Promise.all(heroKeys.map(k => { const el = document.getElementById(k); return el ? setDoc(doc(db, 'settings', k), { value: el.value }) : null; }));
+                toast('Hero settings saved');
+            } catch (e) { toast('Error saving', true); console.error(e); }
+        });
+    </script>
+</body>
+</html>
