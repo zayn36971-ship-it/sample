@@ -1,0 +1,22 @@
+{
+  "rewrites": [
+    { "source": "/reports/:slug", "destination": "/report-viewer.html" },
+    { "source": "/cv/view", "destination": "/api/cv?action=view" },
+    { "source": "/cv/download", "destination": "/api/cv?action=download" }
+  ],
+  "headers": [
+    {
+      "source": "/uploads/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:css|js|jfif|png|jpg|jpeg|gif|svg|ico|woff|woff2))",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=604800" }
+      ]
+    }
+  ],
+  "trailingSlash": false
+}

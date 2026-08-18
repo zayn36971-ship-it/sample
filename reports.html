@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Izaan Shakil — Reports & Work Samples. QA Dispo Reports, Buyer CPA Reports, Publisher CPA Reports, CRM Issue Reports, Automation Workflows.">
+    <title>Reports — IZAAN Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ── Design tokens (mirror main site) ── */
+        :root {
+            --bg-darkest: #010104;
+            --bg-dark: #020819;
+            --bg-mid: #02133D;
+            --accent-1: #07339D;
+            --accent-3: #0D6BE8;
+            --accent-4: #2D8EFF;
+            --accent-5: #63B5FF;
+            --text-white: #F6F6F6;
+            --text-light: #E3E6EA;
+            --text-muted: #B6BBC1;
+            --text-dim: #78797D;
+            --neutral-2: #232428;
+            --glow-gradient: linear-gradient(90deg, #07339D, #0D4CC8, #0D6BE8, #2D8EFF, #63B5FF);
+            --glow-sm: 0 0 10px #0D6BE8;
+            --font-primary: 'Space Grotesk', sans-serif;
+            --font-secondary: 'Sora', sans-serif;
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--bg-darkest);
+            font-family: var(--font-primary);
+            color: var(--text-white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ── Background ── */
+        .page-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse at 30% 20%, rgba(7, 51, 157, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(13, 107, 232, 0.1) 0%, transparent 50%);
+        }
+
+        /* ── Header ── */
+        .reports-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(1, 1, 4, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(13, 107, 232, 0.1);
+        }
+
+        .header-logo {
+            font-family: var(--font-secondary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--text-white);
+            text-shadow: 0 0 15px rgba(13, 107, 232, 0.5);
+        }
+
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            transition: color 0.3s;
+        }
+
+        .header-back:hover {
+            color: var(--accent-4);
+        }
+
+        /* ── Main Layout ── */
+        .reports-page {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ── Page Title ── */
+        .page-title {
+            font-family: var(--font-secondary);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .gradient-text {
+            background: var(--glow-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        /* ── Filters ── */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            border: 1px solid rgba(13, 107, 232, 0.15);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-primary);
+        }
+
+        .filter-btn:hover {
+            color: var(--text-white);
+            border-color: rgba(13, 107, 232, 0.3);
+        }
+
+        .filter-btn.active {
+            color: var(--text-white);
+            background: var(--glow-gradient);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(13, 107, 232, 0.3);
+        }
+
+        .filter-search {
+            margin-left: auto;
+            padding: 8px 16px;
+            background: rgba(13, 107, 232, 0.05);
+            border: 1px solid rgba(13, 107, 232, 0.15);
+            border-radius: 50px;
+            color: var(--text-white);
+            font-family: var(--font-primary);
+            font-size: 0.85rem;
+            outline: none;
+            width: 220px;
+            transition: border-color 0.3s;
+        }
+
+        .filter-search:focus {
+            border-color: var(--accent-3);
+        }
+
+        .filter-search::placeholder {
+            color: var(--text-dim);
+        }
+
+        /* ── Sort ── */
+        .sort-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+
+        .sort-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sort-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            border: 1px solid rgba(13, 107, 232, 0.1);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-primary);
+        }
+
+        .sort-btn:hover,
+        .sort-btn.active {
+            color: var(--accent-4);
+            border-color: rgba(13, 107, 232, 0.3);
+        }
+
+        /* ── Reports Grid ── */
+        .reports-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .report-item {
+            background: rgba(13, 107, 232, 0.16);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(13, 107, 232, 0.12);
+            border-radius: 20px;
+            transition: all 0.4s var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+        }
+
+        .report-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--glow-gradient);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 4;
+        }
+
+        .report-item:hover::before {
+            opacity: 1;
+        }
+
+        .report-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(13, 107, 232, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(13, 107, 232, 0.1);
+        }
+
+        .report-item-thumb {
+            aspect-ratio: 16 / 9;
+            height: auto;
+            width: 100%;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-mid));
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(13, 107, 232, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-item-thumb::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(1, 4, 15, 0.4);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .report-item-thumb span {
+            align-self: flex-start;
+            margin: 20px;
+            position: relative;
+            z-index: 3;
+            font-family: var(--font-secondary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #63B5FF;
+            letter-spacing: 2px;
+            background: rgba(2, 8, 25, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(13, 107, 232, 0.4);
+            padding: 5px 14px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(13, 107, 232, 0.25);
+            opacity: 1;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .report-thumb-text {
+            width: 100%;
+            padding: 40px 20px 20px 20px;
+            background: linear-gradient(to top, rgba(1, 4, 15, 0.95) 0%, rgba(1, 4, 15, 0.6) 50%, transparent 100%);
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .report-thumb-text h3 {
+            margin-bottom: 8px;
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .report-thumb-text p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: left;
+            margin-bottom: 0;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .report-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: transparent;
+            width: 100%;
+        }
+
+        .report-footer-link {
+            font-family: var(--font-secondary) !important;
+            font-weight: 500 !important;
+            font-size: 0.8rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            transition: color 0.3s !important;
+            background: transparent;
+            color: var(--accent-4);
+            border: 1px solid var(--accent-3);
+            border-radius: 13px;
+            padding: 2px 12px;
+        }
+
+        .report-footer-link:hover {
+            color: var(--text-white) !important;
+        }
+
+        .report-item-tags {
+            display: flex;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .report-tag {
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-4);
+            background: rgba(13, 107, 232, 0.08);
+            border: 1px solid rgba(13, 107, 232, 0.15);
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .report-item-date {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin: -5px 20px 15px 20px;
+            text-align: left;
+        }
+
+        .report-view-btn:hover {
+            background: rgba(13, 107, 232, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(13, 107, 232, 0.2);
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-dim);
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+        }
+
+        /* ── Footer ── */
+        .reports-footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(13, 107, 232, 0.06);
+        }
+
+        .reports-footer p {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .reports-page {
+                padding: 24px;
+            }
+
+            .reports-header {
+                padding: 15px 20px;
+            }
+
+            .header-logo {
+                font-size: 1.2rem;
+            }
+
+            .filter-search {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-bar>div {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .reports-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Loading animation ── */
+        .report-item {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards;
+        }
+
+        .report-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .report-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .report-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .report-item:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .report-item:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .report-item:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-bg"></div>
+
+    <header class="reports-header">
+        <a href="/" class="header-logo">IZAAN</a>
+        <a href="/" class="header-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Back to Portfolio
+        </a>
+    </header>
+
+    <main class="reports-page">
+        <h1 class="page-title"><span class="gradient-text">Reports &amp; Work Samples</span></h1>
+        <p class="page-desc">Browse my QA reports, CPA performance reports, CRM issue reports, and automation workflow
+            documentation.</p>
+
+        <div class="filter-bar">
+            <div>
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="QA Report">QA Reports</button>
+                <button class="filter-btn" data-filter="Buyer Report">Buyer Reports</button>
+                <button class="filter-btn" data-filter="Publisher">Publisher Reports</button>
+                <button class="filter-btn" data-filter="CRM QA">CRM / Tracker</button>
+                <button class="filter-btn" data-filter="Automation">Automation</button>
+            </div>
+            <input type="text" class="filter-search" placeholder="Search reports..." id="report-search">
+        </div>
+
+        <div class="sort-bar">
+            <span class="sort-label">Sort by:</span>
+            <button class="sort-btn active" data-sort="latest">Latest</button>
+            <button class="sort-btn" data-sort="title">Title A-Z</button>
+            <button class="sort-btn" data-sort="category">Category</button>
+        </div>
+
+        <div class="reports-list" id="reports-list">
+            <!-- Reports loaded dynamically -->
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display:none;">
+            <h3>No reports found</h3>
+            <p>Try adjusting your filters or search query.</p>
+        </div>
+    </main>
+
+    <footer class="reports-footer">
+        <p>&copy; 2026 Izaan. All rights reserved.</p>
+    </footer>
+
+    <script>
+        (function () {
+            var allReports = [];
+            var currentFilter = 'all';
+            var currentSort = 'latest';
+            var searchQuery = '';
+
+            // Fetch reports from Firestore
+            function loadReports() {
+                var db = window.firebaseDB;
+                var h = window.firebaseHelpers;
+                h.getDocs(h.collection(db, 'reports'))
+                    .then(function (snapshot) {
+                        var reports = snapshot.docs.map(function (d) { var data = d.data(); data.id = d.id; return data; });
+                        allReports = reports
+                            .filter(function (r) { return r.published == 1 || r.published === true; })
+                            .sort(function (a, b) { return (a.sort_order || 0) - (b.sort_order || 0); });
+                        renderReports();
+                    })
+                    .catch(function () {
+                        // Fallback sample data
+                        allReports = [
+                            { id: 1, title: 'QA Dispo Report — Weekly Summary', description: 'Daily QA summary showing total reviewed calls, clean calls, flagged calls, sales, risk levels, and top alerts.', category: 'QA Report', tags: 'QA Report,Call Review', report_date: '2026-07-15', pdf_path: null },
+                            { id: 2, title: 'Buyer CPA Performance Report', description: 'Buyer performance report showing total calls, billable %, sales, revenue, RPC, CPC, CPA, and zero-sale alerts.', category: 'Buyer Report', tags: 'Buyer Report,CPA', report_date: '2026-07-12', pdf_path: null },
+                            { id: 3, title: 'Publisher CPA Report', description: 'Publisher performance report showing traffic quality, sales, duplicate issues, no routes, revenue, payout, and CPA.', category: 'Publisher', tags: 'Publisher,Traffic Quality', report_date: '2026-07-10', pdf_path: null },
+                            { id: 4, title: 'CRM / Tracker Issue Report', description: 'Issue report documenting tracker problems: missing revenue, caller ID mismatch, billable status errors, cap issues.', category: 'CRM QA', tags: 'CRM QA,Issue Report', report_date: '2026-07-08', pdf_path: null },
+                            { id: 5, title: 'Automation Workflow Documentation', description: 'Workflow explanation showing how call data moves from CSV export to Google Sheets, AI QA, Slack reporting.', category: 'Automation', tags: 'n8n,Automation', report_date: '2026-07-05', pdf_path: null }
+                        ];
+                        renderReports();
+                    });
+            }
+            if (window.firebaseReady) { loadReports(); }
+            else { window.addEventListener('firebase-ready', loadReports); }
+
+            function renderReports() {
+                var filtered = allReports.filter(function (r) {
+                    var matchFilter = currentFilter === 'all' || (r.tags && r.tags.indexOf(currentFilter) !== -1) || r.category === currentFilter;
+                    var matchSearch = !searchQuery || r.title.toLowerCase().indexOf(searchQuery) !== -1 || r.description.toLowerCase().indexOf(searchQuery) !== -1;
+                    return matchFilter && matchSearch;
+                });
+
+                // Sort
+                if (currentSort === 'latest') {
+                    filtered.sort(function (a, b) { return new Date(b.report_date) - new Date(a.report_date); });
+                } else if (currentSort === 'title') {
+                    filtered.sort(function (a, b) { return a.title.localeCompare(b.title); });
+                } else if (currentSort === 'category') {
+                    filtered.sort(function (a, b) { return (a.category || '').localeCompare(b.category || ''); });
+                }
+
+                var list = document.getElementById('reports-list');
+                var empty = document.getElementById('empty-state');
+
+                if (filtered.length === 0) {
+                    list.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+                empty.style.display = 'none';
+
+                list.innerHTML = filtered.map(function (r, i) {
+                    var tags = (r.tags || '').split(',').filter(Boolean).slice(0, 2);
+                    var tagsHtml = tags.map(function (t) { return '<span class="report-tag">' + t.trim() + '</span>'; }).join('');
+                    var thumbText = r.category ? r.category.toUpperCase().substring(0, 16) : 'REPORT';
+                    var bgStyle = r.thumbnail_path ? 'background-image: url(\'' + r.thumbnail_path + '\');' : '';
+                    var viewUrl = r.pdf_path ? '/reports/' + r.id : '#';
+                    var dateStr = r.report_date ? new Date(r.report_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+
+                    return '<article class="report-item" style="animation-delay:' + (i * 0.1) + 's">' +
+                        '<div class="report-item-thumb" style="' + bgStyle + '">' +
+                        '<span>' + thumbText + '</span>' +
+                        '<div class="report-thumb-text">' +
+                        '<h3>' + r.title + '</h3>' +
+                        '<p>' + r.description + '</p>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="report-footer">' +
+                        '<a href="' + viewUrl + '" class="report-footer-link">View Report</a>' +
+                        '<div class="report-item-tags">' + tagsHtml + '</div>' +
+                        '</div>' +
+                        (dateStr ? '<div class="report-item-date">' + dateStr + '</div>' : '') +
+                        '</article>';
+                }).join('');
+            }
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    currentFilter = this.getAttribute('data-filter');
+                    renderReports();
+                });
+            });
+
+            // Sort buttons
+            document.querySelectorAll('.sort-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.sort-btn').forEach(function (b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    currentSort = this.getAttribute('data-sort');
+                    renderReports();
+                });
+            });
+
+            // Search
+            document.getElementById('report-search').addEventListener('input', function () {
+                searchQuery = this.value.toLowerCase().trim();
+                renderReports();
+            });
+        })();
+    </script>
+    <script type="module" src="/js/firebase-loader.js"></script>
+</body>
+
+</html>

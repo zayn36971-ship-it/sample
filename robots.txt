@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /uploads/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /reports/
+
+Sitemap: /
