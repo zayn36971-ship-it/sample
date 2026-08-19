@@ -216,7 +216,7 @@
 
     <header class="viewer-header">
         <a href="/" class="header-logo">IZAAN</a>
-        <a href="/reports" class="header-back">
+        <a href="/reports.html" class="header-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
             Back to Reports
         </a>
@@ -232,7 +232,9 @@
 
     <script>
         (function() {
-            var reportId = window.location.pathname.split('/').pop();
+            var urlParams = new URLSearchParams(window.location.search); 
+            var reportId = urlParams.get('id') || 
+            window.location.pathname.split('/').pop();
 
             if (!reportId || reportId === 'reports') {
                 showNoReport();
