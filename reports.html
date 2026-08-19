@@ -630,7 +630,7 @@
                     var tagsHtml = tags.map(function (t) { return '<span class="report-tag">' + t.trim() + '</span>'; }).join('');
                     var thumbText = r.category ? r.category.toUpperCase().substring(0, 16) : 'REPORT';
                     var bgStyle = r.thumbnail_path ? 'background-image: url(\'' + r.thumbnail_path + '\');' : '';
-                    var viewUrl = r.pdf_path ? '/reports/' + r.id : '#';
+                    var viewUrl = r.pdf_path ? '/report-viewer.html?id=' + r.id : '#';
                     var dateStr = r.report_date ? new Date(r.report_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
 
                     return '<article class="report-item" style="animation-delay:' + (i * 0.1) + 's">' +
