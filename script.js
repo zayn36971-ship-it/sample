@@ -1122,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', function () {
         name: form.querySelector('#contact-name').value.trim(),
         email: form.querySelector('#contact-email').value.trim(),
         company: form.querySelector('#contact-company').value.trim(),
-        service: form.querySelector('#contact-service').value,
+        service_needed: form.querySelector('#contact-service').value,
         meeting_date: dateEl ? dateEl.value : '',
         meeting_time: timeEl ? timeEl.value : '',
         timezone: tzEl ? tzEl.value : '',
