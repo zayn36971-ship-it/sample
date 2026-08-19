@@ -754,7 +754,7 @@
                 tbody.innerHTML = items.length === 0 ? '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);">No submissions yet.</td></tr>' :
                     items.map(s => {
                         const isMtg = !!(s.meeting_date || s.meeting_time);
-                        const dt = s.submitted_at ? new Date(s.submitted_at) : null;
+                        const dt = s.submitted_at ? (typeof s.submitted_at.toDate === 'function' ? s.submitted_at.toDate() : new Date(s.submitted_at)) : null;
                         return `<tr>
                         <td style="white-space:nowrap;font-size:0.75rem;">${dt?dt.toLocaleDateString():'—'}<br><span style="color:var(--text-dim);">${dt?dt.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):''}</span></td>
                         <td>${isMtg?'<span class="badge badge-success">📅 Meeting</span>':'<span class="badge" style="background:rgba(255,255,255,0.1);color:var(--text-dim);">✉️ Inquiry</span>'}</td>
