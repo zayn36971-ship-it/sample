@@ -1,6 +1,5 @@
 {
   "rewrites": [
-    { "source": "/reports", "destination": "/reports.html" },
     { "source": "/reports/:slug", "destination": "/report-viewer.html" },
     { "source": "/cv/view", "destination": "/api/cv?action=view" },
     { "source": "/cv/download", "destination": "/api/cv?action=download" }
