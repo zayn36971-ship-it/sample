@@ -762,10 +762,10 @@
                         <td>${s.service_needed||'-'}</td>
                         <td style="white-space:nowrap;font-size:0.78rem;color:#63B5FF;">
                             ${isMtg ? `
-                           📅 <strong>${s.meeting_date || 'TBD'}</strong><br>
-                           ⏰ <strong>${s.meeting_time || 'TBD'}</strong><br>
-                           <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Meeting+with+${encodeURIComponent(s.name)}&dates=${(s.meeting_date || '').replace(/-/g, '')}T${(s.meeting_time || '00:00').replace(/:/g, '')}00Z/${(s.meeting_date || '').replace(/-/g, '')}T${(s.meeting_time || '00:00').replace(/:/g, '')}00Z&details=Client+Email:+${encodeURIComponent(s.email)}.+Message:+${encodeURIComponent(s.message || '')}" target="_blank" style="color:var(--accent-4);font-size:0.7rem;text-decoration:underline;display:inline-block;margin-top:4px;">+ Add to Google Calendar</a>
-                           ` : '<span style="color:var(--text-dim);">-</span>'}
+                                📅 <strong>${s.meeting_date || 'TBD'}</strong><br>
+                                ⏰ <strong>${s.meeting_time || 'TBD'}</strong><br>
+                                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Meeting+with+${encodeURIComponent(s.name)}&dates=${(s.meeting_date || '').replace(/-/g, '')}T${(s.meeting_time || '00:00').replace(/:/g, '')}00Z/${(s.meeting_date || '').replace(/-/g, '')}T${(s.meeting_time || '00:00').replace(/:/g, '')}00Z&details=Client+Email:+${encodeURIComponent(s.email)}.+Message:+${encodeURIComponent(s.message || '')}" target="_blank" style="color:var(--accent-4);font-size:0.7rem;text-decoration:underline;display:inline-block;margin-top:4px;">+ Add to Google Calendar</a>
+                            ` : '<span style="color:var(--text-dim);">-</span>'}
                         </td>
                         <td style="max-width:220px;font-size:0.8rem;">${s.message||''}</td>
                         <td><select onchange="updateSubStatus('${s.id}',this.value)" style="padding:2px 6px;font-size:0.75rem;width:auto;">
