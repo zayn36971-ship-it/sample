@@ -1873,7 +1873,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (cvSnap.exists()) {
             const cvData = cvSnap.data();
             if (cvData.pdf_path && cvData.pdf_path.trim()) {
-              const cvViewUrl = '/cv/view';
+              const cvViewUrl = cvData.pdf_path;
               const cvLinks = ['#nav-cv-link', '#footer-cv-link', '#footer-cv-btn'];
               cvLinks.forEach(sel => {
                 const el = document.querySelector(sel);
