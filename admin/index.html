@@ -744,7 +744,11 @@
         async function loadSubmissions() {
             try {
                 const items = await getAll('contact_submissions');
-                items.sort((a, b) => (b.submitted_at || '').localeCompare(a.submitted_at || ''));
+                items.sort((a, b) => {
+    const dateA = a.submitted_at && typeof a.submitted_at.toDate === 'function' ? a.submitted_at.toDate() : new Date(a.submitted_at || 0);
+    const dateB = b.submitted_at && typeof b.submitted_at.toDate === 'function' ? b.submitted_at.toDate() : new Date(b.submitted_at || 0);
+    return dateB - dateA;
+        });
                 document.getElementById('sub-count').textContent = items.length;
                 const tbody = document.getElementById('sub-tbody');
                 tbody.innerHTML = items.length === 0 ? '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);">No submissions yet.</td></tr>' :
